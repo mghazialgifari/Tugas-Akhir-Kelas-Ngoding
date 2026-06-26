@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_SISWA 100
+#define MAX_NAMA  50
+int main() {
+    /* === Deklarasi Array Penyimpanan Data === */
+    char nama[MAX_SISWA][MAX_NAMA];  /* Array string untuk menyimpan nama siswa  */
+    int  nilai[MAX_SISWA];           /* Array integer untuk menyimpan nilai siswa */
+    int  jumlahSiswa;
+    int  totalNilai = 0;
+    float rataRata;
+    int  i;
+    /* ========================================
+     *  1. INPUT JUMLAH SISWA
+     * ======================================== */
+    printf("============================================\n");
+    printf("     PROGRAM LAPORAN DATA SISWA\n");
+    printf("============================================\n\n");
+    printf("Masukkan jumlah siswa (maks %d): ", MAX_SISWA);
+    scanf("%d", &jumlahSiswa);
+    /* Validasi jumlah siswa */
+    if (jumlahSiswa <= 0 || jumlahSiswa > MAX_SISWA) {
+        printf("Jumlah siswa tidak valid!\n");
+        return 1;
+    }
+    /* Bersihkan buffer setelah scanf */
+    getchar();
+    /* ========================================
+     *  2. INPUT DATA SETIAP SISWA
+     * ======================================== */
+    printf("\n--- Masukkan Data Siswa ---\n");
+    for (i = 0; i < jumlahSiswa; i++) {
+        printf("\nSiswa ke-%d\n", i + 1);
+        printf("  Nama  : ");
+        fgets(nama[i], MAX_NAMA, stdin);
+        /* Hapus newline dari fgets */
+        nama[i][strcspn(nama[i], "\n")] = '\0';
+        printf("  Nilai : ");
+        scanf("%d", &nilai[i]);
+        /* Bersihkan buffer */
+        getchar();
+        /* Validasi nilai */
+        if (nilai[i] < 0 || nilai[i] > 100) {
+            printf("  [!] Nilai harus antara 0-100. Silakan ulangi.\n");
+            i--;  /* Ulangi input untuk siswa ini */
+            continue;
+        }
+    }
+    /* ========================================
+     *  3. PROSES DATA: Hitung Total & Rata-rata
+     * ======================================== */
+    for (i = 0; i < jumlahSiswa; i++) {
+        totalNilai += nilai[i];
+    }
+    rataRata = (float)totalNilai / jumlahSiswa;
+    /* ========================================
+     *  4. OUTPUT: Tampilkan Laporan
+     * ======================================== */
+    printf("\n\n============================================\n");
+    printf("          LAPORAN DATA SISWA\n");
+    printf("============================================\n");
+    printf("%-4s %-25s %-8s %s\n", "No", "Nama Siswa", "Nilai", "Status");
+    printf("--------------------------------------------\n");
+    for (i = 0; i < jumlahSiswa; i++) {
+        /* Tentukan status kelulusan */
+        char status[15];
+        if (nilai[i] >= 75) {
+            strcpy(status, "Lulus");
+        } else {
+            strcpy(status, "Tidak Lulus");
+        }
+        printf("%-4d %-25s %-8d %s\n", i + 1, nama[i], nilai[i], status);
+    }
+    printf("--------------------------------------------\n");
+    printf("Total Nilai    : %d\n", totalNilai);
+    printf("Jumlah Siswa   : %d\n", jumlahSiswa);
+    printf("Rata-rata Kelas: %.2f\n", rataRata);
+    printf("============================================\n");
+    return 0;
+}
